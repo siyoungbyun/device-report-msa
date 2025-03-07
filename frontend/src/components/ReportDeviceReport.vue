@@ -13,7 +13,7 @@
         </v-card-title >
         <v-card-title v-else>
             단말기신고
-        </v-card-title >        
+        </v-card-title >
 
         <v-card-text style="background-color: white;">
             <Number v-if="editMode" label="신고ID" v-model="value.reportId" :editMode="editMode" :inputUI="''"/>
@@ -146,7 +146,7 @@
                 input.type = "file";
                 input.accept = "image/*";
                 input.id = "uploadInput";
-                
+
                 input.click();
                 input.onchange = function (event) {
                     var file = event.target.files[0]
@@ -156,7 +156,7 @@
                         var result = reader.result;
                         me.imageUrl = result;
                         me.value.photo = result;
-                        
+
                     };
                     reader.readAsDataURL( file );
                 };
@@ -170,8 +170,9 @@
 
                     if(!this.offline) {
                         if(this.isNew) {
-                            temp = await axios.post(axios.fixUrl('/deviceReports'), this.value)
+                            temp = await axios.post(axios.fixUrl('/deviceReports/report'), this.value)
                         } else {
+                            console.log(this.value._links.self.href);
                             temp = await axios.put(axios.fixUrl(this.value._links.self.href), this.value)
                         }
                     }
@@ -201,7 +202,7 @@
                         this.snackbar.text = e
                     }
                 }
-                
+
             },
             async remove(){
                 try {
@@ -235,10 +236,10 @@
                     }
 
                     this.editMode = false;
-                    
+
                     this.$emit('input', this.value);
                     this.$emit('delete', this.value);
-                
+
                 } catch(e) {
                     this.snackbar.status = true
                     if(e.response && e.response.data.message) {

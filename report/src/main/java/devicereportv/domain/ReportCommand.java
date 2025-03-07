@@ -8,5 +8,5 @@ import lombok.Data;
 public class ReportCommand {
 
     private Long userId;
-    private String deviceId;
+    private Long deviceId;
 }

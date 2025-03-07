@@ -20,7 +20,7 @@ public class DeviceReport {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long reportId;
 
-    private String deviceId;
+    private Long deviceId;
 
     private Long userId;
 
@@ -31,7 +31,7 @@ public class DeviceReport {
     private Date updatedAt;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private ReportStatus status;
 
     public static DeviceReportRepository repository() {
         DeviceReportRepository deviceReportRepository = ReportApplication.applicationContext.getBean(
@@ -43,6 +43,13 @@ public class DeviceReport {
     //<<< Clean Arch / Port Method
     public void report(ReportCommand reportCommand) {
         //implement business logic here:
+        this.deviceId = reportCommand.getDeviceId();
+        this.userId = reportCommand.getUserId();
+        this.status = ReportStatus.CREATED;
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+
+        repository().save(this);
 
         ReportCreated reportCreated = new ReportCreated(this);
         reportCreated.publishAfterCommit();
@@ -52,6 +59,11 @@ public class DeviceReport {
     //<<< Clean Arch / Port Method
     public void review(ReviewCommand reviewCommand) {
         //implement business logic here:
+        this.reviewerId = reviewCommand.getReviewerId();
+        this.status = reviewCommand.getStatus();
+        this.updatedAt = new Date();
+
+        repository().save(this);
 
         ReportReviewed reportReviewed = new ReportReviewed(this);
         reportReviewed.publishAfterCommit();
@@ -61,30 +73,21 @@ public class DeviceReport {
 
     //<<< Clean Arch / Port Method
     public static void resolveStatus(DeviceStatusUpdated deviceStatusUpdated) {
-        //implement business logic here:
 
-        /** Example 1:  new item 
-        DeviceReport deviceReport = new DeviceReport();
-        repository().save(deviceReport);
+        // Find all reports for this device that are not already resolved
+        List<DeviceReport> reports = repository().findByDeviceIdAndStatusNot(
+            deviceStatusUpdated.getDeviceId(),
+            ReportStatus.RESOLVED
+        );
 
-        ReportResolved reportResolved = new ReportResolved(deviceReport);
-        reportResolved.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(deviceStatusUpdated.get???()).ifPresent(deviceReport->{
-            
-            deviceReport // do something
+        for (DeviceReport deviceReport : reports) {
+            deviceReport.setStatus(ReportStatus.RESOLVED);
+            deviceReport.setUpdatedAt(new Date());
             repository().save(deviceReport);
 
             ReportResolved reportResolved = new ReportResolved(deviceReport);
             reportResolved.publishAfterCommit();
-
-         });
-        */
-
+        }
     }
     //>>> Clean Arch / Port Method
 

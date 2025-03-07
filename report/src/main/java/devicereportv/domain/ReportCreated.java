@@ -12,12 +12,12 @@ import lombok.*;
 public class ReportCreated extends AbstractEvent {
 
     private Long reportId;
-    private String deviceId;
+    private Long deviceId;
     private Long userId;
     private Long reviewerId;
     private Date createdAt;
     private Date updatedAt;
-    private Status status;
+    private ReportStatus status;
 
     public ReportCreated(DeviceReport aggregate) {
         super(aggregate);

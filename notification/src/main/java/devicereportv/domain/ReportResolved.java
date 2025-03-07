@@ -10,7 +10,7 @@ import lombok.*;
 public class ReportResolved extends AbstractEvent {
 
     private Long reportId;
-    private String deviceId;
+    private Long deviceId;
     private Long userId;
     private Long reviewerId;
     private Date createdAt;

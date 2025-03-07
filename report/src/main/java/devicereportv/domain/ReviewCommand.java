@@ -8,7 +8,7 @@ import lombok.Data;
 public class ReviewCommand {
 
     private Long reportId;
-    private String deviceId;
+    private Long deviceId;
     private Long reviewerId;
-    private Status status;
+    private ReportStatus status;
 }
