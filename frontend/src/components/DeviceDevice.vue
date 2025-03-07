@@ -13,7 +13,7 @@
         </v-card-title >
         <v-card-title v-else>
             단말기
-        </v-card-title >        
+        </v-card-title >
 
         <v-card-text style="background-color: white;">
             <Number v-if="editMode" label="단말기ID" v-model="value.deviceId" :editMode="editMode" :inputUI="''"/>
@@ -131,7 +131,7 @@
                 input.type = "file";
                 input.accept = "image/*";
                 input.id = "uploadInput";
-                
+
                 input.click();
                 input.onchange = function (event) {
                     var file = event.target.files[0]
@@ -141,7 +141,7 @@
                         var result = reader.result;
                         me.imageUrl = result;
                         me.value.photo = result;
-                        
+
                     };
                     reader.readAsDataURL( file );
                 };
@@ -155,7 +155,7 @@
 
                     if(!this.offline) {
                         if(this.isNew) {
-                            temp = await axios.post(axios.fixUrl('/devices'), this.value)
+                            temp = await axios.post(axios.fixUrl('/devices/add'), this.value)
                         } else {
                             temp = await axios.put(axios.fixUrl(this.value._links.self.href), this.value)
                         }
@@ -186,7 +186,7 @@
                         this.snackbar.text = e
                     }
                 }
-                
+
             },
             async remove(){
                 try {
@@ -220,10 +220,10 @@
                     }
 
                     this.editMode = false;
-                    
+
                     this.$emit('input', this.value);
                     this.$emit('delete', this.value);
-                
+
                 } catch(e) {
                     this.snackbar.status = true
                     if(e.response && e.response.data.message) {

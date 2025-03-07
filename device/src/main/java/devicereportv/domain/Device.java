@@ -42,7 +42,19 @@ public class Device {
 
     //<<< Clean Arch / Port Method
     public void add(AddCommand addCommand) {
-        //implement business logic here:
+
+        this.imei = addCommand.getImei();
+        this.userId = addCommand.getUserId();
+        this.phoneNumber = addCommand.getPhoneNumber();
+        this.deviceStatus = DeviceStatus.ACTIVATED; // Set initial status to ACTIVATED
+
+        // Set timestamps
+        Date now = new Date();
+        this.createdAt = now;
+        this.updatedAt = now;
+
+        // Save the new device
+        repository().save(this);
 
         DeviceCreated deviceCreated = new DeviceCreated(this);
         deviceCreated.publishAfterCommit();
@@ -54,7 +66,7 @@ public class Device {
     public static void updateDeviceStatus(ReportReviewed reportReviewed) {
         //implement business logic here:
 
-        /** Example 1:  new item 
+        /** Example 1:  new item
         Device device = new Device();
         repository().save(device);
 
@@ -63,10 +75,10 @@ public class Device {
         */
 
         /** Example 2:  finding and process
-        
+
 
         repository().findById(reportReviewed.get???()).ifPresent(device->{
-            
+
             device // do something
             repository().save(device);
 
